@@ -1,21 +1,38 @@
 # Set the base image for subsequent instructions
 FROM php:7.3
 
-# Update packages
-RUN apt-get update
+# Install dependencies
+RUN apt-get update -yqq && apt-get install -yqq \
+    git \
+    libcurl4-gnutls-dev \
+    libicu-dev \
+    libmcrypt-dev \
+    libvpx-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libxpm-dev \
+    zlib1g-dev \
+    libfreetype6-dev \
+    libxml2-dev \
+    libexpat1-dev \
+    libbz2-dev \
+    libgmp3-dev \
+    libldap2-dev \
+    unixodbc-dev \
+    libpq-dev \
+    libsqlite3-dev \
+    libaspell-dev \
+    libsnmp-dev \
+    libpcre3-dev \
+    libtidy-dev
 
-# Install PHP and composer dependencies
-RUN apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev
-
-# Clear out the local repository of retrieved package files
-RUN apt-get clean
-
-# Install needed extensions
-# Here you can install any other extension that you need during the test and deployment process
-RUN docker-php-ext-install mcrypt pdo_mysql zip
+# Install php extensions
+RUN docker-php-ext-install mbstring pdo_mysql curl json intl gd xml zip bz2 opcache bcmath
 
 # Install Composer
-RUN curl --silent --show-error https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php
+RUN chmod +x composer.phar
+RUN mv composer.phar /bin/composer
 
 # Install Laravel Envoy
 RUN composer global require "laravel/envoy=~1.0"
