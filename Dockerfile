@@ -24,7 +24,8 @@ RUN apt-get update -yqq && apt-get install -yqq \
     libaspell-dev \
     libsnmp-dev \
     libpcre3-dev \
-    libtidy-dev
+    libtidy-dev \
+    libzip-dev
 
 # Install php extensions
 RUN docker-php-ext-install mbstring pdo_mysql curl json intl gd xml zip bz2 opcache bcmath
